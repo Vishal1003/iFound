@@ -1,103 +1,118 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
+import { connect } from "react-redux";
+import { RegisterAuthAction } from "../../redux/actions/authActions";
 
-export default function Register({ onSubmit }) {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const nameRef = useRef();
-  const confirmpasswordRef = useRef();
+function Register(props) {
+  const { user, register } = props;
+  const [userState, setUserstate] = useState();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (passwordRef.current.value !== confirmpasswordRef.current.value) {
+    if (userState.password !== userState.password2) {
       window.alert("Passwords do not match");
       return;
     }
-
-    const data = {
-      name: nameRef.current.value,
-      email: emailRef.current.value,
-      password: passwordRef.current.value,
-      password2: confirmpasswordRef.current.value,
-    };
-    onSubmit(data);
+    register(userState);
   };
-
-  const Field = React.forwardRef(
-    ({ label, type, required, className }, ref) => {
-      return (
-        <div className={className}>
-          <label style={styles.labelStyle}>{label}</label>
-          <input
-            required={required}
-            ref={ref}
-            type={type}
-            style={styles.inputStyle}
-          />
-        </div>
-      );
-    }
-  );
 
   return (
     <div className="container">
-        <h2 style={styles.title}>
-          User <span style={{ color: "#e62632" }}>Register</span>
-        </h2>
-        <form style={styles.formStyle} onSubmit={handleSubmit}>
-          <div className="row">
-            <Field
-              className="col-md-6"
-              required={true}
-              ref={nameRef}
-              label="Name:"
+      <h2 style={styles.title}>
+        User <span style={{ color: "#e62632" }}>Register</span>
+      </h2>
+      <form style={styles.formStyle} onSubmit={handleSubmit}>
+        <div className="row">
+          <div className="col-md-6">
+            <label style={styles.labelStyle}>Name:</label>
+            <input
+              required
               type="text"
-            />
-            <Field
-              className="col-md-6"
-              required={true}
-              ref={emailRef}
-              label="Email:"
-              type="email"
-            />
-          </div>
-          <div className="row">
-            <Field
-              required={true}
-              ref={passwordRef}
-              label="Password:"
-              type="password"
-              className="col-md-6"
-            />
-            <Field
-              required={true}
-              ref={confirmpasswordRef}
-              label="Confirm Password:"
-              type="password"
-              className="col-md-6"
+              style={styles.inputStyle}
+              onChange={(event) => {
+                const name = event.target.value;
+                setUserstate({ ...userState, ...{ name } });
+              }}
             />
           </div>
 
-          <div style={{ marginTop: 10 }}>
-            <button
-              className="btn btn-primary"
-              style={styles.button}
-              type="submit"
-            >
-              Login
-            </button>
-            {"  "}
-            <div style={{ marginTop: 10, fontSize: 15 }}>
-              Already have an account ? {"  "}
-              <a href="/login" style={{ color: "blue" }}>
-                Login
-              </a>
-            </div>
+          <div className="col-md-6">
+            <label style={styles.labelStyle}>Email:</label>
+            <input
+              required
+              type="email"
+              style={styles.inputStyle}
+              onChange={(event) => {
+                const email = event.target.value;
+                setUserstate({ ...userState, ...{ email } });
+              }}
+            />
           </div>
-        </form>
-      </div>
+        </div>
+        <div className="row">
+          <div className="col-md-6">
+            <label style={styles.labelStyle}>Password:</label>
+            <input
+              required
+              type="password"
+              style={styles.inputStyle}
+              onChange={(event) => {
+                const password = event.target.value;
+                setUserstate({ ...userState, ...{ password } });
+              }}
+            />
+          </div>
+
+          <div className="col-md-6">
+            <label style={styles.labelStyle}>Confirm Password:</label>
+            <input
+              required
+              type="password"
+              style={styles.inputStyle}
+              onChange={(event) => {
+                const password2 = event.target.value;
+                setUserstate({ ...userState, ...{ password2 } });
+              }}
+            />
+          </div>
+        </div>
+
+        <div style={{ marginTop: 10 }}>
+          <button
+            className="btn btn-primary"
+            style={styles.button}
+            type="submit"
+          >
+            Login
+          </button>
+          {"  "}
+          <div style={{ marginTop: 10, fontSize: 15 }}>
+            Already have an account ? {"  "}
+            <a href="/login" style={{ color: "blue" }}>
+              Login
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    user: state,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    register: (userState) => {
+      dispatch(RegisterAuthAction(userState))
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
 
 const styles = {
   title: {

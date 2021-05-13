@@ -32,24 +32,28 @@ exports.postLogin = async (req, res, next) => {
 // User Register route
 exports.postRegister = async (req, res, next) => {
   const { name, email, password } = req.body;
-  let user = await User.findOne({ email });
-  if (user)
-    return res.json({
-      success: false,
-      msg: "User already registered with that emailId",
+  try {
+    let user = await User.findOne({ email });
+    if (user)
+      return res.json({
+        success: false,
+        msg: "User already registered with that emailId",
+      });
+
+    const hashPassword = await bcrypt.hash(password, 8);
+    user = await new User({
+      name,
+      email,
+      password: hashPassword,
     });
 
-  const hashPassword = await bcrypt.hash(password, 8);
-  user = await new User({
-    name,
-    email,
-    password: hashPassword,
-  });
+    user = await user.save();
 
-  user = await user.save();
+    if (!user)
+      return res.json({ success: false, msg: "Oops! Something went wrong!" });
 
-  if (!user)
-    return res.json({ success: false, msg: "Oops! Something went wrong!" });
-
-  res.json({ success: true, msg: "User registered successfully!", user });
+    res.json({ success: true, msg: "User registered successfully!", user });
+  } catch (e) {
+    console.log(e);
+  }
 };

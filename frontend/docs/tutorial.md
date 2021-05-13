@@ -20,3 +20,10 @@ Example :
         <FancyButton ref={ref}>Click me!</FancyButton>;
         `
 
+### Redux
+
+Steps : 
+
+1. Create Store using `createStore` from `redux`
+2. Wrap the App in `index.js` in Provider with this store
+3. Create reducers (we need to pass the initial state as well)
