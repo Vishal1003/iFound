@@ -10,14 +10,14 @@ exports.getAllPosts = async (req, res, next) => {
 
 exports.getOnePost = async (req, res, next) => {
   const { id } = req.params;
-  const post = await Post.findById({ _id: id });
+  const post = await Post.findById(id);
   if (!post) return res.json({ success: false, msg: "No post found!" });
   return res.json({ success: true, post });
 };
 
 exports.getUser = async (req, res, next) => {
   const { id } = req.params;
-  const user = await User.findById({ _id: id }).select("-password");
+  const user = await User.findById(id).select("-password");
   if (!user) return res.json({ success: false, msg: "No user found" });
   return res.json({ success: true, user });
 };
@@ -48,4 +48,68 @@ exports.createPost = async (req, res, next) => {
   if (!post)
     return res.json({ success: false, msg: "Oops! Something went wrong" });
   return res.json({ success: true, post });
+};
+
+exports.updatePost = async (req, res, next) => {
+  const { title, description } = req.body;
+
+  console.log(title);
+
+  const postId = req.params.id;
+  const user = req.user;
+  console.log(user);
+
+  const oldPost = await Post.findById(postId);
+  if (!oldPost) return res.json({ success: false, msg: "Post Not Found!" });
+
+  const createdOn = oldPost.createdOn;
+
+  let file = req.file;
+  let imageUrl = null;
+  let cloudinary_id = null;
+
+  if (file) {
+    await cloudinary.uploader.destroy(oldPost.cloudinary_id);
+    let result = await cloudinary.uploader.upload(file.path);
+    imageUrl = result.secure_url;
+    cloudinary_id = result.cloudinary_id;
+  } else {
+    imageUrl = oldPost.imageUrl;
+    cloudinary_id = oldPost.cloudinary_id;
+  }
+
+  let updates = {
+    title,
+    description,
+    postedBy: user.userId,
+    createdOn,
+    imageUrl,
+    cloudinary_id,
+  };
+
+  let post = await Post.findByIdAndUpdate(
+    postId,
+    { $set: updates },
+    { new: true }
+  );
+
+  if (!post)
+    return res.json({ success: false, msg: "Oops! Something went wrong" });
+  return res.json({ success: true, msg: "Post Updated Successfully!", post });
+};
+
+exports.deletePost = async (req, res, next) => {
+  const postId = req.params.id;
+  const post = await Post.findById(postId);
+  await cloudinary.uploader.destroy(post.cloudinary_id);
+  let deletedPost = await Post.findByIdAndDelete(postId);
+  if (deletedPost) {
+    return res.json({
+      success: true,
+      message: "Post deleted successfully",
+      deletedPost,
+    });
+  } else {
+    return res.json({ success: false, message: "Post Not Found" });
+  }
 };

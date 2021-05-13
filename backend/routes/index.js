@@ -41,6 +41,15 @@ router.post(
 
 router.get("/posts/:id", controller.getOnePost);
 
+router.delete("/posts/:id", requireAuth, controller.deletePost);
+
+router.patch(
+  "/posts/:id",
+  requireAuth,
+  uploadOptions.single("image"),
+  controller.updatePost
+);
+
 router.get("/users/:id", controller.getUser);
 
 module.exports = router;
