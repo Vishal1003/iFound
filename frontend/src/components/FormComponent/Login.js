@@ -1,52 +1,110 @@
-import React from 'react'
+import React, { useRef } from "react";
 
-const {innerHeight, innerWidth} = window
+const { innerHeight, innerWidth } = window;
 
-export default function Login() {
+export default function Login({ onSubmit }) {
+  const emailRef = useRef();
+  const passwordRef = useRef();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const data = {
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
+    };
+    onSubmit(data);
+  };
+
+  const Field = React.forwardRef(({ label, type, required }, ref) => {
     return (
-        <div className="container">
-            
-        </div>
-    )
+      <div>
+        <label style={styles.labelStyle}>{label}</label>
+        <input
+          required={required}
+          ref={ref}
+          type={type}
+          style={styles.inputStyle}
+        />
+      </div>
+    );
+  });
+
+  return (
+    <div className="container">
+      <div style={styles.card}>
+        <h2 style={styles.title}>
+          User Log<span style={{ color: "#e62632" }}>In</span>
+        </h2>
+        <form style={styles.formStyle} onSubmit={handleSubmit}>
+          <Field required={true} ref={emailRef} label="Email:" type="text" />
+          <Field required={true} ref={passwordRef} label="Password:" type="password" />
+          <div style={{ marginTop: 20 }}>
+            <button
+              className="btn btn-primary"
+              style={styles.button}
+              type="submit"
+            >
+              Submit
+            </button>
+            {"  "}
+            <span style={{ marginTop: 50 }}>
+              Don't have an account ?{" "}
+              <a href="/register" style={{ color: "blue" }}>
+                Register
+              </a>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }
 
-
 const styles = {
-    card: {
-      height: innerHeight / 2,
-      width: innerWidth / 1.5,
-      border: "2px solid gray",
-      margin: "auto",
-      marginTop: innerHeight / 5,
-      borderRadius: 20,
-      boxShadow: "1px 1px 2px 2px gray",
-      textAlign: "center",
-    },
-  
-    title: {
-      marginLeft: "auto",
-      marginRight: "auto",
-      marginTop: 50,
-      fontWeight: "bold",
-    },
-  
-    button: {
-      display: "block",
-      width: innerWidth / 2,
-      marginTop: 10,
-      marginBottom: 10,
-      marginLeft: "auto",
-      marginRight: "auto",
-      padding: 10,
-      borderRadius: 10,
-      fontWeight: "bold",
-      color: "#FFEFD5",
-      backgroundColor: "#9370DB",
-    },
-  
-    buttonGrp: {
-      alignItems: "center",
-      marginTop: 100,
-    },
-  };
-  
+  card: {
+    height: innerHeight / 1.5,
+    width: innerWidth / 1.5,
+    border: "2px solid lightgray",
+    margin: "auto",
+    marginTop: innerHeight / 8,
+    borderRadius: 20,
+    textAlign: "center",
+  },
+
+  title: {
+    marginLeft: "auto",
+    marginRight: "auto",
+    margin: 50,
+    fontWeight: "bold",
+  },
+
+  button: {
+    backgroundColor: "#9370DB",
+    padding: 10,
+    width: 150,
+  },
+
+  formStyle: {
+    margin: "auto",
+    padding: "10px",
+    border: "1px solid #c9c9c9",
+    borderRadius: "5px",
+    background: "#f5f5f5",
+    width: innerWidth / 2,
+    display: "block",
+    textAlign: "start",
+  },
+
+  labelStyle: {
+    margin: "10px 0 5px 0",
+    fontSize: "15px",
+  },
+  inputStyle: {
+    margin: "5px 0 10px 0",
+    padding: "5px",
+    border: "1px solid #bfbfbf",
+    borderRadius: "3px",
+    boxSizing: "border-box",
+    width: "100%",
+  },
+};

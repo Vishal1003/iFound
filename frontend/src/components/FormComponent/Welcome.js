@@ -1,13 +1,14 @@
 import React from "react";
-
 const { innerHeight, innerWidth } = window;
 
 export default function Welcome() {
   return (
     <div className="container">
       <div style={styles.card}>
-        <h2 style={styles.title}>Welcome User</h2>
-        <div style={styles.buttonGrp}>
+        <h2 style={styles.title}>
+          Welcome <span style={{color: "#e62632"}}>User</span>
+        </h2>
+        <div style={styles.content}>
           <a href="/login" className="btn" style={styles.button}>
             LOGIN
           </a>
@@ -53,7 +54,7 @@ const styles = {
     backgroundColor: "#9370DB",
   },
 
-  buttonGrp: {
+  content: {
     alignItems: "center",
     marginTop: 100,
   },

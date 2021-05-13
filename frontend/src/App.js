@@ -6,6 +6,12 @@ import Register from "./components/FormComponent/Register";
 import Header from "./components/HeaderComponent/Header";
 
 export default function App() {
+  const handleSubmit = (data) => {
+    const json = JSON.stringify(data, null, 4);
+    console.clear();
+    console.log(json);
+  };
+
   return (
     <Router>
       <div>
@@ -15,7 +21,7 @@ export default function App() {
             <Welcome />
           </Route>
           <Route exact path="/login">
-            <Login />
+            <Login onSubmit={handleSubmit} />
           </Route>
           <Route exact path="/register">
             <Register />

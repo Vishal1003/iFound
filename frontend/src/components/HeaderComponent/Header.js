@@ -4,7 +4,7 @@ export default function Header() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <a className="navbar-brand" href="/">
-        Home
+        <span style={{ color: "#e62632", fontSize: "x-large" }}>iF</span>ound
       </a>
       <button
         className="navbar-toggler"
