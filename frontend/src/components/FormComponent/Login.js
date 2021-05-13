@@ -1,7 +1,5 @@
 import React, { useRef } from "react";
 
-const { innerHeight, innerWidth } = window;
-
 export default function Login({ onSubmit }) {
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -31,7 +29,6 @@ export default function Login({ onSubmit }) {
 
   return (
     <div className="container">
-      <div style={styles.card}>
         <h2 style={styles.title}>
           User Log<span style={{ color: "#e62632" }}>In</span>
         </h2>
@@ -61,21 +58,10 @@ export default function Login({ onSubmit }) {
           </div>
         </form>
       </div>
-    </div>
   );
 }
 
 const styles = {
-  card: {
-    height: innerHeight / 1.5,
-    width: innerWidth / 1.5,
-    border: "2px solid lightgray",
-    margin: "auto",
-    marginTop: innerHeight / 8,
-    borderRadius: 20,
-    textAlign: "center",
-  },
-
   title: {
     marginLeft: "auto",
     marginRight: "auto",
@@ -93,11 +79,10 @@ const styles = {
 
   formStyle: {
     margin: "auto",
-    padding: "10px",
+    padding: "25px",
     border: "1px solid #c9c9c9",
     borderRadius: "5px",
     background: "#f5f5f5",
-    width: innerWidth / 2,
     display: "block",
     textAlign: "start",
   },

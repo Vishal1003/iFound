@@ -1,7 +1,5 @@
 import React, { useRef } from "react";
 
-const { innerHeight, innerWidth } = window;
-
 export default function Register({ onSubmit }) {
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -43,21 +41,20 @@ export default function Register({ onSubmit }) {
 
   return (
     <div className="container">
-      <div style={styles.card}>
         <h2 style={styles.title}>
           User <span style={{ color: "#e62632" }}>Register</span>
         </h2>
         <form style={styles.formStyle} onSubmit={handleSubmit}>
           <div className="row">
             <Field
-              className="col"
+              className="col-md-6"
               required={true}
               ref={nameRef}
               label="Name:"
               type="text"
             />
             <Field
-              className="col"
+              className="col-md-6"
               required={true}
               ref={emailRef}
               label="Email:"
@@ -70,14 +67,14 @@ export default function Register({ onSubmit }) {
               ref={passwordRef}
               label="Password:"
               type="password"
-              className="col"
+              className="col-md-6"
             />
             <Field
               required={true}
               ref={confirmpasswordRef}
               label="Confirm Password:"
               type="password"
-              className="col"
+              className="col-md-6"
             />
           </div>
 
@@ -91,29 +88,18 @@ export default function Register({ onSubmit }) {
             </button>
             {"  "}
             <div style={{ marginTop: 10, fontSize: 15 }}>
-              Don't have an account ? {"  "}
-              <a href="/register" style={{ color: "blue" }}>
-                Register
+              Already have an account ? {"  "}
+              <a href="/login" style={{ color: "blue" }}>
+                Login
               </a>
             </div>
           </div>
         </form>
       </div>
-    </div>
   );
 }
 
 const styles = {
-  card: {
-    height: innerHeight / 1.5,
-    width: innerWidth / 1.5,
-    border: "2px solid lightgray",
-    margin: "auto",
-    marginTop: innerHeight / 8,
-    borderRadius: 20,
-    textAlign: "center",
-  },
-
   title: {
     marginLeft: "auto",
     marginRight: "auto",
@@ -131,11 +117,10 @@ const styles = {
 
   formStyle: {
     margin: "auto",
-    padding: "10px",
+    padding: "25px",
     border: "1px solid #c9c9c9",
     borderRadius: "5px",
     background: "#f5f5f5",
-    width: innerWidth / 2,
     display: "block",
     textAlign: "start",
   },
