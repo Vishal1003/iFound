@@ -36,23 +36,28 @@ export default function Login({ onSubmit }) {
           User Log<span style={{ color: "#e62632" }}>In</span>
         </h2>
         <form style={styles.formStyle} onSubmit={handleSubmit}>
-          <Field required={true} ref={emailRef} label="Email:" type="text" />
-          <Field required={true} ref={passwordRef} label="Password:" type="password" />
-          <div style={{ marginTop: 20 }}>
+          <Field required={true} ref={emailRef} label="Email:" type="email" />
+          <Field
+            required={true}
+            ref={passwordRef}
+            label="Password:"
+            type="password"
+          />
+          <div style={{ marginTop: 10 }}>
             <button
               className="btn btn-primary"
               style={styles.button}
               type="submit"
             >
-              Submit
+              Login
             </button>
             {"  "}
-            <span style={{ marginTop: 50 }}>
-              Don't have an account ?{" "}
+            <div style={{ marginTop: 10, fontSize: 15 }}>
+              Don't have an account ? {"  "}
               <a href="/register" style={{ color: "blue" }}>
                 Register
               </a>
-            </span>
+            </div>
           </div>
         </form>
       </div>
@@ -79,9 +84,11 @@ const styles = {
   },
 
   button: {
+    display: "block",
     backgroundColor: "#9370DB",
     padding: 10,
     width: 150,
+    borderRadius: 10,
   },
 
   formStyle: {

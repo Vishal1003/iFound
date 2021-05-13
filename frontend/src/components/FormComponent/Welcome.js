@@ -50,7 +50,7 @@ const styles = {
     padding: 10,
     borderRadius: 10,
     fontWeight: "bold",
-    color: "#FFEFD5",
+    color: "#fff",
     backgroundColor: "#9370DB",
   },
 

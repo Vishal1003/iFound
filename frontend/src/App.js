@@ -24,7 +24,7 @@ export default function App() {
             <Login onSubmit={handleSubmit} />
           </Route>
           <Route exact path="/register">
-            <Register />
+            <Register onSubmit={handleSubmit} />
           </Route>
         </Switch>
       </div>
