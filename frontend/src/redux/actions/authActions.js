@@ -22,7 +22,7 @@ export const loadUser = () => (dispatch, getState) => {
     .get("http://localhost:5000/api/user/getUser", tokenConfig(getState))
     .then((res) => {
       if (res.data.success === true)
-        dispatch({ type: AuthActionType.USER_LOADED, payload: res.data });
+        dispatch({ type: AuthActionType.USER_LOADED, payload: res.data.user });
       else {
         dispatch({ type: AuthActionType.AUTH_ERROR });
         dispatch(returnErrors(res.data.msg, res.data.error_id));

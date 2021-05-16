@@ -14,16 +14,26 @@ exports.postLogin = async (req, res, next) => {
     });
 
   if (bcrypt.compareSync(password, user.password)) {
-    const token = await jwt.sign(
-      { userId: user._id, admin: user.isAdmin },
+    user = await User.findOne({ email }).select("-password");
+
+    if (!user)
+      return res.json({
+        success: false,
+        error_id: 1,
+        msg: "Oops! Something went wrong!",
+      });
+
+    const token = jwt.sign(
+      { id: user._id, admin: user.isAdmin },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1d",
+        expiresIn: 3600,
       }
     );
-    return res.json({
+
+    res.json({
       success: true,
-      msg: "User LoggedIn Successfully!",
+      msg: "User LoggedIn successfully!",
       user,
       token,
     });
@@ -91,6 +101,6 @@ exports.getUserData = async (req, res, next) => {
   const data = await User.findById(req.user.id).select("-password");
   if (!data)
     return res.json({ success: false, error_id: 1, msg: "User not found" });
-
+  // console.log(data);
   return res.json({ success: true, user: data });
 };

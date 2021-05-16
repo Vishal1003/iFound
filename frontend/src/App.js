@@ -31,7 +31,10 @@ export default function App() {
             <Route exact path="/register">
               <Register />
             </Route>
-            <ProtectedRoute exact path="/dashboard" component={DashBoard} />
+            {/* <ProtectedRoute exact path="/dashboard" component={DashBoard} /> */}
+            <Route exact path="/dashboard">
+              <DashBoard />
+            </Route>
             <Route path="*" component={() => "404 NOT FOUND"} />
           </Switch>
         </div>
