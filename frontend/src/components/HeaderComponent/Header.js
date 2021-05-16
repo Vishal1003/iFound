@@ -58,6 +58,7 @@ function Header(props) {
                   </a>
                   <div className="dropdown-divider"></div>
                   <a
+                    href="/"
                     className="dropdown-item"
                     onClick={() => {
                       logout(history);

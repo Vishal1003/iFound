@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 
 import { loadUser } from "./redux/actions/authActions";
+import ProtectedRoute from "./components/ProtectedComponent/ProtectedRoute";
 
 export default function App() {
   useEffect(() => {
@@ -30,9 +31,8 @@ export default function App() {
             <Route exact path="/register">
               <Register />
             </Route>
-            <Route exact path="/dashboard">
-              <DashBoard />
-            </Route>
+            <ProtectedRoute exact path="/dashboard" component={DashBoard} />
+            <Route path="*" component={() => "404 NOT FOUND"} />
           </Switch>
         </div>
       </Router>

@@ -1,12 +1,11 @@
 import { AuthActionType } from "../actions/actionTypes";
 
-
 const initialState = {
   msg: {},
   id: null,
 };
 
-export default function (state = initialState, action) {
+export default function errorReducer(state = initialState, action) {
   switch (action.type) {
     case AuthActionType.GET_ERRORS:
       return {

@@ -7,7 +7,7 @@ const initialState = {
   user: null,
 };
 
-export default function (state = initialState, action) {
+export default function authReducer(state = initialState, action) {
   switch (action.type) {
     case AuthActionType.USER_LOADING:
       return {
@@ -41,7 +41,7 @@ export default function (state = initialState, action) {
         token: null,
         user: null,
         isAuthenticated: false,
-        isLoading: false
+        isLoading: false,
       };
     default:
       return state;

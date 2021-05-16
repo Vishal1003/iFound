@@ -1,5 +1,3 @@
-import axios from "axios";
-
 import { AuthActionType } from "./actionTypes";
 
 // GET ERRORS

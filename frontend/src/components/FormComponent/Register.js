@@ -10,7 +10,7 @@ function Register(props) {
   const history = useHistory();
   useEffect(() => {
     if (error.id === 1) setUserstate({ ...userState, msg: error.msg });
-  }, [error]);
+  }, [error, userState]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
