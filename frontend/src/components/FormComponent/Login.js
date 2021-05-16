@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { login } from "../../redux/actions/authActions";
+import { useHistory } from "react-router";
 
 function Login(props) {
   const { login, error } = props;
-
   const [loginState, setLoginState] = useState({ msg: null });
+  const history = useHistory();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    login(loginState);
+    login(loginState, history);
   };
 
   useEffect(() => {

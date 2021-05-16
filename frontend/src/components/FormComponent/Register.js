@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { register } from "../../redux/actions/authActions";
+import { useHistory } from "react-router";
 
 function Register(props) {
   const { register, error } = props;
   const [userState, setUserstate] = useState({ msg: null });
-
+  const history = useHistory();
   useEffect(() => {
     if (error.id === 1) setUserstate({ ...userState, msg: error.msg });
   }, [error]);
@@ -19,7 +20,7 @@ function Register(props) {
       return;
     }
     // console.log(userState);
-    register(userState);
+    register(userState, history);
   };
 
   return (
