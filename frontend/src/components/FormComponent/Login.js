@@ -15,8 +15,11 @@ function Login(props) {
   };
 
   useEffect(() => {
-    if (error.id === 1) setLoginState({ ...loginState, msg: error.msg });
-  }, [error, loginState]);
+    if (error.id === 1)
+      setLoginState((prevState) => {
+        return { ...prevState, msg: error.msg };
+      });
+  }, [error]);
 
   return (
     <div className="container">

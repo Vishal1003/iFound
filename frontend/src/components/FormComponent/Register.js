@@ -9,9 +9,11 @@ function Register(props) {
   const [userState, setUserstate] = useState({ msg: null });
   const history = useHistory();
   useEffect(() => {
-    if (error.id === 1) setUserstate({ ...userState, msg: error.msg });
-  }, [error, userState]);
-
+    if (error.id === 1)
+      setUserstate((prevState) => {
+        return { ...prevState, msg: error.msg };
+      });
+  }, [error]);
   const handleSubmit = async (e) => {
     e.preventDefault();
 

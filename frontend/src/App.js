@@ -5,40 +5,53 @@ import Login from "./components/FormComponent/Login";
 import Register from "./components/FormComponent/Register";
 import Header from "./components/HeaderComponent/Header";
 import DashBoard from "./components/Profile/DashBoard";
-import { Provider } from "react-redux";
-import store from "./redux/store";
-
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import { loadUser } from "./redux/actions/authActions";
-import ProtectedRoute from "./components/ProtectedComponent/ProtectedRoute";
 
-export default function App() {
+function App(props) {
+  const { isAuthenticated, loadUser } = props;
+
   useEffect(() => {
-    store.dispatch(loadUser());
+    loadUser();
   }, []);
 
   return (
-    <Provider store={store}>
-      <Router>
-        <div>
-          <Header />
-          <Switch>
-            <Route exact path="/">
-              <Welcome />
-            </Route>
-            <Route exact path="/login">
-              <Login />
-            </Route>
-            <Route exact path="/register">
-              <Register />
-            </Route>
-            {/* <ProtectedRoute exact path="/dashboard" component={DashBoard} /> */}
+    <Router>
+      <div>
+        <Header />
+        <Switch>
+          <Route exact path="/">
+            <Welcome />
+          </Route>
+          <Route exact path="/login">
+            <Login />
+          </Route>
+          <Route exact path="/register">
+            <Register />
+          </Route>
+          {isAuthenticated ? (
             <Route exact path="/dashboard">
               <DashBoard />
             </Route>
-            <Route path="*" component={() => "404 NOT FOUND"} />
-          </Switch>
-        </div>
-      </Router>
-    </Provider>
+          ) : null}
+
+          <Route path="*" component={() => "404 NOT FOUND"} />
+        </Switch>
+      </div>
+    </Router>
   );
 }
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.error,
+});
+
+App.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  error: PropTypes.object.isRequired,
+  loadUser: PropTypes.func.isRequired,
+};
+
+export default connect(mapStateToProps, { loadUser })(App);

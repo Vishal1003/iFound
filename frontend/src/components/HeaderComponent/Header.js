@@ -8,6 +8,11 @@ function Header(props) {
   const { logout, auth } = props;
   const { isAuthenticated } = auth;
   const history = useHistory();
+
+  const handleSubmit = () => {
+    logout(history);
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <a className="navbar-brand" href="/">
@@ -57,13 +62,7 @@ function Header(props) {
                     Settings
                   </a>
                   <div className="dropdown-divider"></div>
-                  <a
-                    href="/"
-                    className="dropdown-item"
-                    onClick={() => {
-                      logout(history);
-                    }}
-                  >
+                  <a href="/" className="dropdown-item" onClick={handleSubmit}>
                     Logout
                   </a>
                 </React.Fragment>
