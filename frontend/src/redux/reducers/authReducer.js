@@ -1,26 +1,49 @@
-import { AuthActionType } from "../actions/authActions";
+import { AuthActionType } from "../actions/actionTypes";
 
-const authState = {
-  isLoggedIn: false,
-  user: {
-    name: "",
-    expires_at: "",
-    jwttoken: "",
-    authorities: [],
-  },
+const initialState = {
+  token: localStorage.getItem("token"),
+  isAuthenticated: null,
+  isLoading: false,
+  user: null,
 };
-const authReducer = (state = authState, action) => {
+
+export default function (state = initialState, action) {
   switch (action.type) {
-    case AuthActionType.REGISTER_SUCCESS:
+    case AuthActionType.USER_LOADING:
       return {
-        isLoggedIn: true,
+        ...state,
+        isLoading: true,
+      };
+    case AuthActionType.USER_LOADED:
+      return {
+        ...state,
+        isAuthenticated: true,
+        isLoading: false,
         user: action.payload,
       };
+    case AuthActionType.LOGIN_SUCCESS:
+    case AuthActionType.REGISTER_SUCCESS:
+      localStorage.setItem("token", action.payload.token);
+      return {
+        ...state,
+        ...action.payload,
+        isAuthenticated: true,
+        isLoading: false,
+      };
+
+    case AuthActionType.AUTH_ERROR:
+    case AuthActionType.LOGIN_FAIL:
     case AuthActionType.REGISTER_FAIL:
-      return state;
+    case AuthActionType.LOGOUT_SUCCESS:
+      localStorage.removeItem("token");
+      return {
+        ...state,
+        token: null,
+        user: null,
+        isAuthenticated: false,
+        isLoading: false
+      };
     default:
       return state;
   }
-};
-
-export default authReducer;
+}

@@ -1,65 +1,89 @@
-import React, { useRef } from "react";
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { login } from "../../redux/actions/authActions";
 
-export default function Login({ onSubmit }) {
-  const emailRef = useRef();
-  const passwordRef = useRef();
+function Login(props) {
+  const { login, error } = props;
 
+  const [loginState, setLoginState] = useState({ msg: null });
   const handleSubmit = (e) => {
     e.preventDefault();
-    const data = {
-      email: emailRef.current.value,
-      password: passwordRef.current.value,
-    };
-    onSubmit(data);
+    login(loginState);
   };
 
-  const Field = React.forwardRef(({ label, type, required }, ref) => {
-    return (
-      <div>
-        <label style={styles.labelStyle}>{label}</label>
-        <input
-          required={required}
-          ref={ref}
-          type={type}
-          style={styles.inputStyle}
-        />
-      </div>
-    );
-  });
+  useEffect(() => {
+    if (error.id === 1) setLoginState({ ...loginState, msg: error.msg });
+  }, [error]);
 
   return (
     <div className="container">
-        <h2 style={styles.title}>
-          User Log<span style={{ color: "#e62632" }}>In</span>
-        </h2>
-        <form style={styles.formStyle} onSubmit={handleSubmit}>
-          <Field required={true} ref={emailRef} label="Email:" type="email" />
-          <Field
-            required={true}
-            ref={passwordRef}
-            label="Password:"
-            type="password"
-          />
-          <div style={{ marginTop: 10 }}>
-            <button
-              className="btn btn-primary"
-              style={styles.button}
-              type="submit"
-            >
-              Login
-            </button>
-            {"  "}
-            <div style={{ marginTop: 10, fontSize: 15 }}>
-              Don't have an account ? {"  "}
-              <a href="/register" style={{ color: "blue" }}>
-                Register
-              </a>
-            </div>
+      <h2 style={styles.title}>
+        User Log<span style={{ color: "#e62632" }}>In</span>
+      </h2>
+      <form style={styles.formStyle} onSubmit={handleSubmit}>
+        <label style={styles.labelStyle}>Email:</label>
+        <input
+          required
+          type="email"
+          style={styles.inputStyle}
+          onChange={(event) => {
+            const email = event.target.value;
+            setLoginState({ ...loginState, ...{ email } });
+          }}
+        />
+        <label style={styles.labelStyle}>Password:</label>
+        <input
+          required
+          type="password"
+          style={styles.inputStyle}
+          onChange={(event) => {
+            const password = event.target.value;
+            setLoginState({ ...loginState, ...{ password } });
+          }}
+        />
+        {loginState.msg ? (
+          <div
+            style={{ color: "brown" }}
+            className="alert alert-danger alert-dismissible fade show"
+            role="alert"
+          >
+            {loginState.msg}
           </div>
-        </form>
-      </div>
+        ) : null}
+        <div style={{ marginTop: 10 }}>
+          <button
+            className="btn btn-primary"
+            style={styles.button}
+            type="submit"
+          >
+            Login
+          </button>
+          {"  "}
+          <div style={{ marginTop: 10, fontSize: 15 }}>
+            Don't have an account ? {"  "}
+            <a href="/register" style={{ color: "blue" }}>
+              Register
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
   );
 }
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.error,
+});
+
+Login.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  error: PropTypes.object.isRequired,
+  login: PropTypes.func.isRequired,
+};
+
+export default connect(mapStateToProps, { login })(Login);
 
 const styles = {
   title: {

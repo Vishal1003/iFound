@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { RegisterAuthAction } from "../../redux/actions/authActions";
+import { register } from "../../redux/actions/authActions";
 
 function Register(props) {
-  const { user, register } = props;
-  const [userState, setUserstate] = useState();
+  const { register, error } = props;
+  const [userState, setUserstate] = useState({ msg: null });
+
+  useEffect(() => {
+    if (error.id === 1) setUserstate({ ...userState, msg: error.msg });
+  }, [error]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,6 +18,7 @@ function Register(props) {
       window.alert("Passwords do not match");
       return;
     }
+    // console.log(userState);
     register(userState);
   };
 
@@ -77,13 +83,23 @@ function Register(props) {
           </div>
         </div>
 
+        {userState.msg ? (
+          <div
+            style={{ color: "brown" }}
+            className="alert alert-danger alert-dismissible fade show"
+            role="alert"
+          >
+            {userState.msg}
+          </div>
+        ) : null}
+
         <div style={{ marginTop: 10 }}>
           <button
             className="btn btn-primary"
             style={styles.button}
             type="submit"
           >
-            Login
+            Register
           </button>
           {"  "}
           <div style={{ marginTop: 10, fontSize: 15 }}>
@@ -98,21 +114,18 @@ function Register(props) {
   );
 }
 
-const mapStateToProps = (state) => {
-  return {
-    user: state,
-  };
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.error,
+});
+
+Register.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  error: PropTypes.object.isRequired,
+  register: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    register: (userState) => {
-      dispatch(RegisterAuthAction(userState))
-    },
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default connect(mapStateToProps, { register })(Register);
 
 const styles = {
   title: {

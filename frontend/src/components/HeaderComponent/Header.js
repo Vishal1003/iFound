@@ -1,6 +1,10 @@
 import React from "react";
+import { connect } from "react-redux";
+import { logout } from "../../redux/actions/authActions";
+import PropTypes from "prop-types";
 
-export default function Header() {
+function Header(props) {
+  const { logout } = props;
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <a className="navbar-brand" href="/">
@@ -32,16 +36,27 @@ export default function Header() {
               User Management
             </a>
             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a className="dropdown-item" href="/login">
-                Login
-              </a>
-              <a className="dropdown-item" href="/register">
-                Register
-              </a>
-              <div className="dropdown-divider"></div>
-              <a className="dropdown-item" href="/">
-                Logout
-              </a>
+              <React.Fragment>
+                <a className="dropdown-item" href="/login">
+                  Login
+                </a>
+                <a className="dropdown-item" href="/register">
+                  Register
+                </a>
+              </React.Fragment>
+
+              <React.Fragment>
+                <a className="dropdown-item" href="/">
+                  Profile
+                </a>
+                <a className="dropdown-item" href="/">
+                  Settings
+                </a>
+                <div className="dropdown-divider"></div>
+                <a className="dropdown-item" onClick={logout}>
+                  Logout
+                </a>
+              </React.Fragment>
             </div>
           </li>
           <li className="nav-item dropdown ml-auto">
@@ -54,3 +69,9 @@ export default function Header() {
     </nav>
   );
 }
+
+Header.propTypes = {
+  logout: PropTypes.func.isRequired,
+};
+
+export default connect(null, { logout })(Header);

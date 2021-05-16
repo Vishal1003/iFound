@@ -9,11 +9,12 @@ exports.postLogin = async (req, res, next) => {
   if (!user)
     return res.json({
       success: false,
+      error_id: 1,
       msg: "That email id is not registered!",
     });
 
   if (bcrypt.compareSync(password, user.password)) {
-    const token = jwt.sign(
+    const token = await jwt.sign(
       { userId: user._id, admin: user.isAdmin },
       process.env.JWT_SECRET,
       {
@@ -26,7 +27,8 @@ exports.postLogin = async (req, res, next) => {
       user,
       token,
     });
-  } else return res.json({ success: false, msg: "Wrong Credentials!" });
+  } else
+    return res.json({ success: false, error_id: 1, msg: "Wrong Credentials!" });
 };
 
 // User Register route
@@ -37,6 +39,7 @@ exports.postRegister = async (req, res, next) => {
     if (user)
       return res.json({
         success: false,
+        error_id: 1,
         msg: "User already registered with that emailId",
       });
 
@@ -50,10 +53,44 @@ exports.postRegister = async (req, res, next) => {
     user = await user.save();
 
     if (!user)
-      return res.json({ success: false, msg: "Oops! Something went wrong!" });
+      return res.json({
+        success: false,
+        error_id: 1,
+        msg: "Oops! Something went wrong!",
+      });
 
-    res.json({ success: true, msg: "User registered successfully!", user });
+    user = await User.findOne({ email }).select("-password");
+
+    if (!user)
+      return res.json({
+        success: false,
+        error_id: 1,
+        msg: "Oops! Something went wrong!",
+      });
+
+    const token = jwt.sign(
+      { id: user._id, admin: user.isAdmin },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: 3600,
+      }
+    );
+
+    res.json({
+      success: true,
+      msg: "User registered successfully!",
+      user,
+      token,
+    });
   } catch (e) {
     console.log(e);
   }
+};
+
+exports.getUserData = async (req, res, next) => {
+  const data = await User.findById(req.user.id).select("-password");
+  if (!data)
+    return res.json({ success: false, error_id: 1, msg: "User not found" });
+
+  return res.json({ success: true, user: data });
 };

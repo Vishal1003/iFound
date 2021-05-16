@@ -4,21 +4,24 @@ const cloudinary = require("../utils/cloudinary");
 
 exports.getAllPosts = async (req, res, next) => {
   const posts = await Post.find({});
-  if (!posts) return res.json({ success: false, msg: "No Posts Found!" });
+  if (!posts)
+    return res.json({ success: false, error_id: 1, msg: "No Posts Found!" });
   return res.json({ success: true, posts });
 };
 
 exports.getOnePost = async (req, res, next) => {
   const { id } = req.params;
   const post = await Post.findById(id);
-  if (!post) return res.json({ success: false, msg: "No post found!" });
+  if (!post)
+    return res.json({ success: false, error_id: 1, msg: "No post found!" });
   return res.json({ success: true, post });
 };
 
 exports.getUser = async (req, res, next) => {
   const { id } = req.params;
   const user = await User.findById(id).select("-password");
-  if (!user) return res.json({ success: false, msg: "No user found" });
+  if (!user)
+    return res.json({ success: false, error_id: 1, msg: "No user found" });
   return res.json({ success: true, user });
 };
 
@@ -30,7 +33,11 @@ exports.createPost = async (req, res, next) => {
 
   const file = req.file;
   if (!file) {
-    return res.json({ success: false, message: "No image file found" });
+    return res.json({
+      success: false,
+      error_id: 1,
+      message: "No image file found",
+    });
   }
   const result = await cloudinary.uploader.upload(file.path);
 
@@ -46,7 +53,11 @@ exports.createPost = async (req, res, next) => {
   post = await post.save();
 
   if (!post)
-    return res.json({ success: false, msg: "Oops! Something went wrong" });
+    return res.json({
+      success: false,
+      error_id: 1,
+      msg: "Oops! Something went wrong",
+    });
   return res.json({ success: true, post });
 };
 
@@ -60,7 +71,8 @@ exports.updatePost = async (req, res, next) => {
   console.log(user);
 
   const oldPost = await Post.findById(postId);
-  if (!oldPost) return res.json({ success: false, msg: "Post Not Found!" });
+  if (!oldPost)
+    return res.json({ success: false, error_id: 1, msg: "Post Not Found!" });
 
   const createdOn = oldPost.createdOn;
 
@@ -94,7 +106,11 @@ exports.updatePost = async (req, res, next) => {
   );
 
   if (!post)
-    return res.json({ success: false, msg: "Oops! Something went wrong" });
+    return res.json({
+      success: false,
+      error_id: 1,
+      msg: "Oops! Something went wrong",
+    });
   return res.json({ success: true, msg: "Post Updated Successfully!", post });
 };
 
@@ -110,6 +126,6 @@ exports.deletePost = async (req, res, next) => {
       deletedPost,
     });
   } else {
-    return res.json({ success: false, message: "Post Not Found" });
+    return res.json({ success: false, error_id: 1, message: "Post Not Found" });
   }
 };

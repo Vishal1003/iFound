@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const adminAuth = (req, res, next) => {
-  const token = req.header("x-auth-token");
+  const token = req.header("x-access-token");
 
   if (!token)
     return res.json({ success: false, msg: "No token, authorization denied" });
